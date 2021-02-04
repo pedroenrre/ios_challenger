@@ -12,6 +12,9 @@ import {
 } from 'react-native';
 import Input from '~/components/InputForm';
 import * as Yup from 'yup';
+import {useDispatch} from 'react-redux';
+import {SetAuth} from '~/store/modules/auth/actions';
+import {SetUser} from '~/store/modules/user/actions';
 
 import Logo from '~/assets/logo_ioasys.png';
 
@@ -21,6 +24,7 @@ import {FontsColors} from '~/helpers/palette';
 import api from '~/services/api';
 
 const Login = () => {
+  const dispatch = useDispatch();
   const passwordRef = useRef();
 
   const [email, setEmail] = useState('');
@@ -51,8 +55,23 @@ const Login = () => {
     try {
       const data = {email, password};
       const res = await api.post('api/v1/users/auth/sign_in', data);
-      console.log(res);
-    } catch (error) {}
+      const {investor, enterprise} = res.data;
+      const {'access-token': token, client, uid} = res.headers;
+      dispatch(SetAuth(token, client, uid));
+      dispatch(SetUser(investor, enterprise));
+    } catch (error) {
+      const {errors} = error.response.data;
+      Alert.alert(
+        'Atenção!',
+        errorMessage(errors[0]),
+        [
+          {
+            text: 'OK',
+          },
+        ],
+        {cancelable: false},
+      );
+    }
     setLoading(false);
   }
 
