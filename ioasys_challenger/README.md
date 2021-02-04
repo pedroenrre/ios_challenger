@@ -8,9 +8,13 @@
 - [x] Listagem de empresas
 - [x] Detalhes de empresa selecionada
 
-## para rodar o app em um dispostivo android usar yarn android
+## para rodar o app em um dispostivo android usar
 
-## para rodar o app em um dispostivo ios usar yarn ios
+    "yarn android"
+
+## para rodar o app em um dispostivo ios usar
+
+    "yarn ios"
 
 ### LIBS padrões para criação de projeto React Native
 
