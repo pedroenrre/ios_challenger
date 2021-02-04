@@ -14,8 +14,8 @@
 
 ### LIBS padrões para criação de projeto React Native
 
-"react": "16.11.0",
-"react-native": "0.62.2",
+    "react": "16.11.0",
+    "react-native": "0.62.2",
 
 ### LIBS padrões para navegação dentro de um app React Native
 
