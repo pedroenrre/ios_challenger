@@ -23,7 +23,7 @@ import {FontsColors} from '~/helpers/palette';
 
 import api from '~/services/api';
 
-const Login = () => {
+const Login = ({navigation}) => {
   const dispatch = useDispatch();
   const passwordRef = useRef();
 
@@ -59,6 +59,7 @@ const Login = () => {
       const {'access-token': token, client, uid} = res.headers;
       dispatch(SetAuth(token, client, uid));
       dispatch(SetUser(investor, enterprise));
+      navigation.replace('Companies');
     } catch (error) {
       const {errors} = error.response.data;
       Alert.alert(

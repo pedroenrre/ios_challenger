@@ -7,7 +7,7 @@ export function SetAuth(token, client, uid) {
 
 export function AuthReset() {
   return {
-    type: '@user/AUTH_RESET',
+    type: '@auth/AUTH_RESET',
     payload: {},
   };
 }

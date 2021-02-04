@@ -1,5 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {CommonActions} from '@react-navigation/native';
+import {useSelector, useDispatch} from 'react-redux';
+import {AuthReset} from '~/store/modules/auth/actions';
+import {UserReset} from '~/store/modules/user/actions';
 import {
   View,
   Text,
@@ -12,36 +15,18 @@ import {
 import Header from '~/components/Header';
 
 import styles from './styles';
-// {
-//   "id": 1,
-//   "email_enterprise": null,
-//   "facebook": null,
-//   "twitter": null,
-//   "linkedin": null,
-//   "phone": null,
-//   "own_enterprise": false,
-//   "enterprise_name": "Fluoretiq Limited",
-//   "photo": "/uploads/enterprise/photo/1/240.jpeg",
-//   "description": "FluoretiQ is a Bristol based medtech start-up developing diagnostic technology to enable bacteria identification within the average consultation window, so that patients can get the right anti-biotics from the start.  ",
-//   "city": "Bristol",
-//   "country": "UK",
-//   "value": 0,
-//   "share_price": 5000.0,
-//   "enterprise_type": {
-//       "id": 3,
-//       "enterprise_type_name": "Health"
-//   }
-// },
 
 import api from '~/services/api';
 
-const Companies = () => {
+const Companies = ({navigation}) => {
+  const dispatch = useDispatch();
+
   const {token, client, uid} = useSelector((state) => state.auth);
 
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  async function getCompanies() {
+  async function getcompanies() {
     try {
       const response = await api.get('api/v1/enterprises');
 
@@ -81,12 +66,14 @@ const Companies = () => {
     api.defaults.headers.common.client = client;
     api.defaults.headers.common.uid = uid;
 
-    getCompanies();
+    getcompanies();
   }, []);
 
   function renderFlatListItem({item}) {
     return (
-      <TouchableOpacity style={styles.ContentBox}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('CompanyDetailed', {id: item.id})}
+        style={styles.ContentBox}>
         <View style={styles.LogoNameRow}>
           <View style={styles.LogoContainer}>
             <Image
@@ -113,7 +100,21 @@ const Companies = () => {
 
   return (
     <>
-      <Header title="Enterprises" leftButtonAction={() => {}} />
+      <Header
+        title="Enterprises"
+        leftButtonAction={() => {}}
+        showRightButton
+        rightButtonAction={() => {
+          dispatch(UserReset());
+          dispatch(AuthReset());
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'Login'}],
+            }),
+          );
+        }}
+      />
       <View style={styles.Container}>
         {loading ? (
           <ActivityIndicator />
@@ -122,7 +123,7 @@ const Companies = () => {
             style={{width: '100%'}}
             showsVerticalScrollIndicator={false}
             data={companies}
-            keyExtractor={(companies) => String(companies.id)}
+            keyExtractor={(company) => String(company.id)}
             renderItem={renderFlatListItem}
             ItemSeparatorComponent={renderSeparator}
           />

@@ -16,7 +16,7 @@ function App() {
       <Provider store={store}>
         <PersistGate persistor={persistor}>
           <StatusBar barStyle="light-content" backgroundColor={Primary.Blue} />
-          <View style={{flex: 1, backgroundColor: '#000'}}>
+          <View style={{flex: 1}}>
             <Routes />
           </View>
         </PersistGate>
